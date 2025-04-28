@@ -1,0 +1,215 @@
+@import "@dasundev/livewire-dropzone-styles";
+/* @import '../../vendor/livewire/flux/dist/flux.css'; */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    h1 {
+        @apply text-5xl font-extrabold dark:text-white;
+    }
+    h2 {
+        @apply text-4xl font-bold dark:text-white;
+    }
+    h3 {
+        @apply text-3xl font-bold dark:text-white;
+    }
+    h4 {
+        @apply text-2xl font-bold dark:text-white;
+    }
+    h5 {
+        @apply text-xl font-bold dark:text-white;
+    }
+    h6 {
+        @apply text-lg font-bold dark:text-white;
+    }
+    div {
+        @apply text-gray-800 dark:text-gray-300;
+    }
+    p {
+        @apply text-sm text-gray-500 dark:text-gray-400;
+    }
+    tr{
+        @apply hover:bg-slate-200 dark:hover:bg-slate-800;
+    }
+    th {
+        @apply px-4 py-3 text-start text-xs font-semibold text-gray-800 uppercase dark:text-neutral-400;
+    }
+    td {
+        @apply px-4 py-2.5 whitespace-nowrap text-sm text-gray-600 dark:text-neutral-200;
+    }
+}
+
+@layer components {
+    .btnPrimary {
+        @apply inline-flex items-center justify-center gap-x-1.5 text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl hover:from-blue-500 hover:to-purple-600 focus:ring-4 focus:outline-none focus:ring-purple-200 disabled:opacity-60 disabled:pointer-events-none dark:hover:bg-blue-700 dark:focus:ring-purple-700 font-medium rounded-xl text-sm px-4 py-2 text-center;
+    }
+
+    .btnSecondary {
+        @apply py-2 px-4 inline-flex items-center gap-x-1.5 text-sm font-medium rounded-xl border  border-transparent bg-gray-300/80 text-gray-800 hover:bg-gray-300 focus:outline-none focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-800 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white dark:focus:bg-white/20 dark:focus:text-white;
+    }
+    .label-input {
+        @apply block text-sm font-medium mb-2 dark:text-white;
+    }
+    .formInputFloat {
+        @apply p-2.5 block w-full bg-gray-200 border-transparent  text-sm placeholder:text-transparent focus:border-primary-500 focus:ring-primary-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-800 dark:border-transparent dark:text-neutral-400 dark:focus:ring-primary-500
+        focus:pt-5
+        focus:pb-2
+        [&:not(:placeholder-shown)]:pt-5
+        [&:not(:placeholder-shown)]:pb-2
+        autofill:pt-5
+        autofill:pb-2;
+    }
+    .isInvalidFormInputFloat {
+        @apply p-2.5 block w-full bg-gray-200 border-red-400  text-sm placeholder:text-transparent focus:border-red-500 focus:ring-red-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-800 dark:border-red-400  dark:text-neutral-400 dark:focus:ring-red-500
+        focus:pt-5
+        focus:pb-2
+        [&:not(:placeholder-shown)]:pt-5
+        [&:not(:placeholder-shown)]:pb-2
+        autofill:pt-5
+        autofill:pb-2;
+    }
+    .isInvalidTextarea {
+        @apply py-3 px-4 block w-full border-red-500 rounded-lg text-sm focus:border-red-500 focus:ring-red-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600;
+    }
+    .formInput {
+        @apply py-2.5 px-2.5 block w-full bg-gray-200 border-gray-200 rounded-xl text-sm focus:border-primary-500 focus:ring-primary-500 disabled:opacity-70 disabled:pointer-events-none dark:bg-slate-800 dark:border-transparent dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:border-primary-500 dark:focus:ring-primary-600;
+    }
+    .formSelect {
+        @apply py-2.5 px-2.5  text-gray-600 block min-w-20 bg-gray-200 border-transparent cursor-pointer disabled:cursor-not-allowed rounded-xl text-sm focus:border-primary-500 focus:ring-primary-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-800 dark:border-transparent dark:text-neutral-400 dark:focus:ring-primary-600;
+    }
+    .disabledInput {
+        @apply py-2.5 bg-slate-200 px-2.5 block w-full rounded-xl text-sm focus:border-primary-500 focus:ring-primary-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-800 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600;
+    }
+    .isInvalid {
+        @apply py-2.5 px-2.5 block w-full bg-gray-200 border-red-500 rounded-xl text-sm focus:border-red-500 focus:ring-red-500 dark:focus:border-red-500 dark:focus:ring-red-500 dark:border-red-400 dark:bg-slate-800 dark:text-neutral-400;
+    }
+    .isInvalidMessage {
+        @apply text-xs text-red-500 dark:text-red-400 mt-0.5;
+    }
+}
+
+@layer utilities {
+    .defaultMenu {
+        @apply flex items-center gap-x-3.5 py-2 px-2.5 text-sm rounded-lg text-neutral-800 hover:bg-primary-700/10 focus:outline-none focus:bg-primary-700/10 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-200 font-semibold;
+    }
+    .activeMenu {
+        @apply flex items-center gap-x-3.5 py-2 px-2.5 bg-primary-100 text-sm text-primary-700 rounded-lg hover:bg-primary-700/10 focus:outline-none focus:bg-primary-700/10 dark:bg-neutral-700 dark:text-primary-500 dark:hover:bg-primary-700/10 font-semibold;
+    }
+    .activeMenuHeader {
+        @apply flex items-center gap-x-3.5 py-2 px-2.5  text-sm text-primary-700 rounded-lg hover:bg-primary-700/10 focus:outline-none focus:bg-primary-700/10 dark:text-primary-500 dark:hover:bg-primary-700/10 font-semibold;
+    }
+
+    .defaultMenuBottom {
+        @apply inline-flex flex-col py-1 items-center justify-center rounded-full  px-5;
+    }
+    .activeMenuBottom {
+        @apply inline-flex flex-col py-1 items-center justify-center rounded-full  px-5;
+    }
+    .sales-menu-active {
+        @apply py-0.5 md:py-3 px-4 md:px-1 border-s-2 md:border-s-0 md:border-b-2 border-primary-800 font-medium text-primary-800  dark:border-primary-200 dark:text-primary-200;
+    }
+    .sales-menu-default {
+        @apply py-0.5 md:py-3 px-4 md:px-1 border-s-2 md:border-s-0 md:border-b-2 border-transparent text-gray-500 hover:text-gray-800  dark:text-neutral-400 dark:hover:text-neutral-200;
+    }
+
+    .tab-default {
+        @apply py-3 px-4 inline-flex items-center gap-x-2 text-sm text-gray-500 hover:text-primary-500 dark:text-gray-400 font-medium rounded-lg  disabled:opacity-50 disabled:pointer-events-none;
+    }
+
+    .tab-active {
+        @apply pointer-events-none py-3 px-4 inline-flex items-center gap-x-2 bg-gray-200 dark:bg-gray-800 text-sm text-primary-600 hover:text-primary-600  font-medium rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:text-primary-500 dark:hover:text-primary-600;
+    }
+
+}
+/* Kotak Select (Multiple Selection) */
+
+
+
+.dt-empty {
+    @apply !text-center !py-14;
+}
+.dt-loading-spinner{
+    @apply border border-primary-500 w-5 h-5 border-4 border-t-transparent rounded-full;
+}
+.select2-container--default .select2-selection--multiple {
+    @apply !py-2 !px-2.5 !block !w-full !bg-gray-200 !border-gray-300 !rounded-xl !text-sm  focus:ring-primary-500 disabled:!opacity-50 disabled:!pointer-events-none dark:!bg-slate-800 dark:!border-transparent dark:!text-neutral-500 dark:!placeholder-neutral-500 dark:focus:ring-primary-600;
+}
+
+/* Tag di dalam kotak */
+.select2-container--default
+    .select2-selection--multiple
+    .select2-selection__choice {
+    @apply !bg-primary-200 !text-gray-800 !border-none !rounded-xl !mx-1 !py-0.5 !my-1 dark:!bg-primary-100 dark:!text-slate-300;
+}
+
+.select2-container .select2-selection--multiple {
+    text-align: center !important; /* Menyelaraskan teks placeholder di tengah */
+    display: flex !important;
+    align-items: center !important; /* Menyelaraskan item secara vertikal */
+}
+
+.select2-container .select2-selection__placeholder {
+    @apply !text-gray-700 dark:!text-slate-300;
+    text-align: center !important; /* Menyelaraskan placeholder di tengah */
+    width: 100% !important; /* Memastikan lebar placeholder cukup untuk teks */
+    margin-top: 0 !important; /* Menghapus margin jika ada */
+    margin-bottom: 0 !important; /* Menghapus margin jika ada */
+    line-height: normal !important; /* Menyesuaikan tinggi garis untuk menghindari jarak yang terlalu besar */
+}
+
+
+/* Ubah border dan padding */
+.select2-container--default .select2-selection--single {
+    @apply !py-5 !px-2.5 block !w-full !bg-gray-200 !border-gray-200 !rounded-xl text-sm focus:!border-primary-500 focus:!ring-primary-500 disabled:opacity-50 disabled:pointer-events-none dark:!bg-slate-800 dark:!border-transparent dark:!text-neutral-400 dark:!placeholder-neutral-500 dark:focus:!border-primary-500 dark:focus:!ring-primary-600;
+    display: flex !important;
+    align-items: center !important;
+
+}
+
+.select2-container--open {
+    z-index: 99999 !important;
+}
+
+/* Ubah teks di dalam select */
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    @apply !text-gray-700 dark:!text-slate-300;
+    font-weight: 500 !important;
+    line-height: 28px !important;
+}
+
+/* Ubah panah dropdown */
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 100%;
+    right: 10px;
+    top: 10px !important;
+    width: 25px !important;
+}
+
+.select2-container--default .select2-dropdown {
+    margin-top: 10px !important;
+    background-color: #fff;
+    border: 2px solid #a933cd !important; /* Tailwind indigo-500 */
+    border-radius: 0.75rem !important;    /* rounded-xl */
+    box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+}
+
+/* Gaya input search */
+.select2-container--default .select2-search--dropdown .select2-search__field {
+    padding: 8px 12px;
+    border-radius: 0.5rem !important; /* rounded-lg */
+    border: 2px solid #dbcbe1; /* slate-300 */
+    outline: none;
+    color: #1e293b; /* slate-800 */
+    font-size: 14px;
+    transition: border 0.2s ease;
+}
+
+
+
+/* // Example: Disable the transition animation when reduced motion is enabled */
+/* .wep-modal-content,
+.wep-slide-over-container-inner-wrap {
+    @apply motion-reduce:transition-none;
+} */

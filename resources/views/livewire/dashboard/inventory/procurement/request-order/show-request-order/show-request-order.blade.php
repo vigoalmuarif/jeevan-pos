@@ -1,0 +1,54 @@
+<div>
+    @php
+        if ($type == 'inbound_requests') {
+            $routeBack = 'dashboards.inventories.procurements.request_orders.inbound_requests.index';
+        } else {
+            $routeBack = 'dashboards.inventories.procurements.request_orders.outbound_requests.index';
+        }
+    @endphp
+    <x-admin.heading class="pb-5" back="{{ $routeBack }}">
+        Detail Permintaan {{ $type == 'inbound_request' ? 'Masuk' : 'Keluar' }}
+    </x-admin.heading>
+
+    <div class="flex w-full">
+        <div class="flex bg-gray-100  rounded-lg transition p-1 dark:bg-neutral-700  w-full">
+            <nav class="flex gap-x-1 p-1" aria-orientation="horizontal">
+                <button type="button" wire:click="switchTab('tab1')" wire:loading.class="pointer-events-none"
+                    class="{{ $activeTab == 'tab1' ? 'tab-active' : 'tab-default' }}">
+                    Permintaan
+                </button>
+                <button type="button" wire:click="switchTab('tab2')" wire:loading.class="pointer-events-none"
+                    class="{{ $activeTab == 'tab2' ? 'tab-active' : 'tab-default' }}">
+                    Partial Approve
+                </button>
+            </nav>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <div x-data="{ tab : $wire.entangle('activeTab') }">
+            @if($tabLoaded['tab1'] == true)
+            <div x-show="tab == 'tab1'">
+                <livewire:dashboard.inventory.procurement.request-order.show-request-order.request-order-items lazy
+                    :$requestOrder wire:key="tab1" />
+            </div>
+            @endif
+
+            @if($tabLoaded['tab2'] == true)
+            <div x-show="tab == 'tab2'">
+                    <p wire:key="tab2">ini tab 2</p>
+            </div>
+            @endif
+        </div>
+    </div>
+
+</div>
+@script
+    <script>
+        Livewire.hook('message.failed', ({
+            component
+        }) => {
+            console.error('Livewire failed for component:', component);
+        });
+    </script>
+@endscript

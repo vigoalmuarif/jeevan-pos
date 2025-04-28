@@ -1,0 +1,13 @@
+
+.toastify {
+    display: flex !important;
+    align-items: center !important; /* Memastikan elemen dalam toast sejajar */
+    justify-content: space-between !important; /* Memisahkan teks & tombol */
+    padding-right: 40px !important; /* Memberikan ruang untuk tombol close */
+    max-width: 350px; /* Sesuaikan dengan lebar toast */
+}
+.toastify .toast-close {
+    position: absolute !important;
+    right: 10px;
+    margin-left: 20px;
+}

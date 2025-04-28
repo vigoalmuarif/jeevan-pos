@@ -1,0 +1,1 @@
+<div {{ $attributes->merge(['class' => 'loader after:border-primary-500']) }}></div>

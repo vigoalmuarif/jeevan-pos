@@ -1,0 +1,1 @@
+<label {{ $attributes->merge(['class' => 'label-input text-nowrap']) }}>{{ $slot }}</label>

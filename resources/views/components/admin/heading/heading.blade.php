@@ -1,6 +1,6 @@
 @props(['back' => null, 'utility', 'action'])
 
-<div {{ $attributes->merge(['class' => 'font-bold text-gray-800 dark:text-white bg-gray-50 z-[100] dark:bg-gray-900 sticky top-[60px] py-1 mb-3']) }}>
+<div {{ $attributes->merge(['class' => 'font-bold text-gray-800 dark:text-white bg-gray-50 z-[50] dark:bg-gray-900 sticky top-[60px] py-1 mb-3']) }}>
     <div class="flex justify-between items-end flex-nowrap w-full">
         <div class="flex items-center space-x-3">
             @if (isset($back))

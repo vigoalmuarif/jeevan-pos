@@ -1,5 +1,5 @@
 <div id="modalStockAdjustment"
-    class="hs-overlay [--overlay-backdrop:static]  hidden size-full fixed top-0 start-0 z-[9999] overflow-x-hidden overflow-y-auto pointer-events-none"
+    class="hs-overlay [--overlay-backdrop:static]  hidden size-full fixed top-0 start-0 z-[999] overflow-x-hidden overflow-y-auto pointer-events-none"
     role="dialog" tabindex="-1" aria-labelledby="modalStockAdjustment-label" wire:ignore.self>
     <div
         class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all md:max-w-[calc(100vw-18rem)]  w-[calc(100vw-5rem)] m-3 h-[calc(100%-56px)] sm:mx-auto">

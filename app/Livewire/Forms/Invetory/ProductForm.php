@@ -37,15 +37,15 @@ class ProductForm extends Form
             'warehouse_id' => [
                 'required',
             ],
-            'brand_id' => [
-                'required',
-            ],
+            //'brand_id' => [
+            //    'required',
+            //],
             'categories' => [
                 'required',
             ],
-            'supplier_id' => [
-                'required',
-            ],
+            //'supplier_id' => [
+            //    'required',
+            //],
             'base_warehouse_unit_id' => [
                 'required',
             ],
@@ -87,9 +87,9 @@ class ProductForm extends Form
             'name.unique' => 'Role sudah digunakan.',
             'sku.required' => 'Harap masukan SKU product.',
             'sku.unique' => 'SKU sudah digunakan.',
-            'brand_id.required' => 'Harap pilih merk.',
+            //'brand_id.required' => 'Harap pilih merk.',
             'categories.required' => 'Harap pilih kategori.',
-            'supplier_id.required' => 'Harap pilih suppplier.',
+            //'supplier_id.required' => 'Harap pilih suppplier.',
             'base_unit_id.required' => 'Harap pilih satuan kecil yang dijual.',
             'base_warehouse_unit_id.required' => 'Harap pilih satuan besar/gudang',
             'index.required' => 'Harap masukan index.',
@@ -131,12 +131,12 @@ class ProductForm extends Form
             //apakah ada gambar utama yg diunggah
             if (isset($this->images[0]) && $this->images[0]) {
 
-                // $extension = $this->images[0]->getClientOriginalExtension();
-                // $filepath = 'storage/images/products';
-                // $filename = 'main_' . auth()->user()->current_active_business_id . '_' . date('YmdHis') . '.' . $extension;
+                $extension = $this->images[0]->getClientOriginalExtension();
+                $filepath = 'storage/images/products';
+                $filename = 'main_' . auth()->user()->current_active_business_id . '_' . date('YmdHis') . '.' . $extension;
 
-                // $this->images[0]->storeAs('images/products', $filename, 'public');
-                // $uploadedFiles[] = 'public/images/products/' . $filename; // Simpan untuk rollback
+                $this->images[0]->storeAs('images/products', $filename, 'public');
+                $uploadedFiles[] = 'public/images/products/' . $filename; // Simpan untuk rollback
 
             } else {
                 $filename = null;
@@ -220,7 +220,11 @@ class ProductForm extends Form
                 ]);
             }
 
-            //sekalian alokasi ke unit gudang
+            //alokasi ke unit gudang
+
+            //ambil satuan besar dari product_unit
+            $unit_big = ProductUnit::where('product_id', $product->id)->where('product_unit_id', $this->base_warehouse_unit_id)->first();
+
             StockAlocation::create([
                 'product_id' => $product->id,
                 'location_id' => $this->warehouse_id,
@@ -229,6 +233,7 @@ class ProductForm extends Form
                 'maximal_stock' => 0,
                 'quantity_awal' => $qty_awal ?? 0,
                 'quantity' => $qty_awal ?? 0,
+                'product_unit_conversion_id' => $unit_big->id,
                 'status' => 1
             ]);
 

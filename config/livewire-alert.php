@@ -11,7 +11,7 @@ return [
         'toast' => true,
         'text' => null,
         'showCancelButton' => false,
-        'showConfirmButton' => false
+        'showConfirmButton' => false,
     ],
     'confirm' => [
         'icon' => 'question',
@@ -23,5 +23,30 @@ return [
         'cancelButtonText' => 'No',
         'cancelButtonColor' => '#9333ea',
         'confirmButtonColor' => '#94a3b8',
+    
+    ],
+
+            
+    'customClass' => [
+        'container' => 'z-[1000]',
+        'popup' => '',
+        'header' => '',
+        'title' => '',
+        'closeButton' => '',
+        'icon' => '',
+        'image' => '',
+        'content' => '',
+        'htmlContainer' => '',
+        'input' => '',
+        'inputLabel' => '',
+        'validationMessage' => '',
+        'actions' => '',
+        'confirmButton' => '',
+        'denyButton' => '',
+        'cancelButton' => '',
+        'loader' => '',
+        'footer' => ''
+        
     ]
+
 ];

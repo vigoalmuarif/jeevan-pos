@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('stock_batch_id')->nullable();
             $table->unsignedBigInteger('satuan_request_id');
             $table->decimal('qty_approved', 12 ,5)->default(0);
+            $table->decimal('qty_request', 12 ,5)->default(0);
             $table->text('note')->nullable();
             $table->text('reject_reason')->nullable();
             $table->string('status')->nullable();

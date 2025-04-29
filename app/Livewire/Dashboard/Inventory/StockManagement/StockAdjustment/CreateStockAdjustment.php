@@ -183,6 +183,7 @@ class CreateStockAdjustment extends Component
                         'qty' => abs($item['qtyAktual'] - $item['qtyAwal']),
                         'stock_awal' => $item['qtyAwal'],
                         'stock_akhir' => $item['qtyAktual'],
+                        'selisih' => $item['qtySelisih'],
                         'reason' => $item['reason'],
                         'adjustment_by' => Auth::id()
                     ]);

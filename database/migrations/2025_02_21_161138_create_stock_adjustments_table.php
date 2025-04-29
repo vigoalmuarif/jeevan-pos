@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('stock_adjustments', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('product_id');
-            $table->unsignedBigInteger('stock_batch_id');
+            $table->unsignedBigInteger('stock_batch_id')->nullable();
             $table->unsignedBigInteger('warehouse_id');
             $table->unsignedBigInteger('product_unit_id');
             $table->string('adjusment_type');

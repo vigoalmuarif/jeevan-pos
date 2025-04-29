@@ -132,14 +132,8 @@ class CreateRequestOrder extends Component
             }])
             ->where('stock_alocations.product_id', $data)
             ->where('stock_alocations.location_id', $this->toWarehouse)
-            ->join('product_unit_conversions', function ($q) use ($destinationWarehouse) { //satuan mengikuti satuan destionationWarehouse
-                $q->on('product_unit_conversions.product_id', 'stock_alocations.product_id')
-                    ->where('product_unit_conversions.product_unit_id', $destinationWarehouse->product_unit_id)
-                    ->limit(1);
-            })
-            ->join('product_units', function ($q) use ($destinationWarehouse) {
-                $q->on('product_unit_conversions.product_unit_id', 'product_units.id');
-            })
+            ->join('product_unit_conversions', 'product_unit_conversions.id', 'stock_alocations.product_unit_conversion_id')
+            ->join('product_units', 'product_units.id', 'stock_alocations.product_unit_id')
             ->distinct()
             ->first();
 
@@ -155,8 +149,10 @@ class CreateRequestOrder extends Component
             'productName' => $sourceWarehouse->product->name,
             'unitID' => $sourceWarehouse->unitID,
             'unitName' => $sourceWarehouse->unit,
-            'stockConversion' => (float) $sourceWarehouse->quantity * $sourceWarehouse->conversion_factor / $sourceWarehouse->conversion_factor,
+            'stockConversion' => (float) $sourceWarehouse->quantity * $sourceWarehouse->conversion_factor / $destinationWarehouse->conversion_factor,
             'qtyConversion' =>  $sourceWarehouse->conversion_factor,
+            'realStock' => $sourceWarehouse->quantity,
+            'stockConversionToSmall' => $sourceWarehouse->quantity * $sourceWarehouse->conversion_factor,
             'units' => $sourceWarehouse->product->product_unit_conversions
         ];
         $this->productSelected['destinationWarehouse'] = [

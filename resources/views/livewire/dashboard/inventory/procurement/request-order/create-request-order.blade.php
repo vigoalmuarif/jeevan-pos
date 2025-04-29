@@ -166,7 +166,7 @@
                                     <div
                                         class="absolute inset-y-0 end-0 flex items-center pointer-events-none z-20 pe-4">
                                         <span class="text-sm text-gray-500 dark:text-neutral-500">
-                                            {{ $productSelected['sourceWarehouse']['unitName'] ?? '-' }}
+                                            {{ $productSelected['destinationWarehouse']['unitName'] ?? '-' }}
                                         </span>
                                     </div>
                                 </div>
@@ -224,11 +224,8 @@
                                                                     } else {
                                                                         $stockConversion =
                                                                             ($productSelected['sourceWarehouse'][
-                                                                                'qtyConversion'
-                                                                            ] *
-                                                                                $productSelected[
-                                                                                    'sourceWarehouse'
-                                                                                ]['stockConversion']) /
+                                                                                'stockConversionToSmall'
+                                                                            ]) /
                                                                             ($item->pivot->conversion_factor ?? 1);
                                                                     }
                                                                 @endphp

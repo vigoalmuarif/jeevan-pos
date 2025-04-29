@@ -76,6 +76,7 @@ class Alokasi extends Component
                 'minimal_stock' => $this->templateQtyMinimal,
                 'maximal_stock' => $this->templateQtyMaximal,
                 'quantity' => $this->templateQtyAwal / $unit->conversion_factor,
+                'product_unit_conversion_id' => $unit->id,
                 'status' => $this->templateAlokasiStatus
             ]);
 

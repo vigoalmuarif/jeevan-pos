@@ -35,9 +35,9 @@
                                             <td>{{ $item->name }}</td>
                                             <td>
                                                 @if ($item->pivot->conversion_factor == 1)
-                                                    {{ ceil(number_format(($product->quantity * $product->conversion_factor) / $item->pivot->conversion_factor, 2)) }}
+                                                    {{ number_format(ceil(($product->quantity * $product->conversion_factor) / $item->pivot->conversion_factor), 2) }}
                                                 @else
-                                                    {{ floor(number_format(($product->quantity * $product->conversion_factor) / $item->pivot->conversion_factor, 2)) }}
+                                                    {{ number_format(floor(($product->quantity * $product->conversion_factor) / $item->pivot->conversion_factor), 2) }}
                                                 @endif
                                             </td>
                                             <td>{{ $item->pivot->conversion_factor }}</td>
@@ -88,9 +88,9 @@
                             <td>{{ $stock_card->batch->batch_number ?? '-' }}</td>
                             <td>{{ $stock_card->movement_type }}</td>
                             <td>{{ $stock_card->unit->name }}</td>
-                            <td>{{ $stock_card->qty_awal }}</td>
-                            <td>{{ $stock_card->qty }}</td>
-                            <td>{{ $stock_card->qty_akhir }}</td>
+                            <td>{{ number_format($stock_card->qty_awal, 2) }}</td>
+                            <td>{{ number_format($stock_card->qty, 2) }}</td>
+                            <td>{{ number_format($stock_card->qty_akhir, 2) }}</td>
                             <td>{{ $stock_card->user->username }}</td>
                             <td>{{ $stock_card->desc }}</td>
                         </tr>

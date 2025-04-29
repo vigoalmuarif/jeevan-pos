@@ -38,6 +38,7 @@ class Show extends Component
                 $join->on('stock_alocations.product_unit_id', 'product_unit_conversions.product_unit_id')
                     ->on('stock_alocations.product_id', 'product_unit_conversions.product_id');
             })
+            ->distinct()
             ->where('location_id', $warehouse->id)
             ->first();
 

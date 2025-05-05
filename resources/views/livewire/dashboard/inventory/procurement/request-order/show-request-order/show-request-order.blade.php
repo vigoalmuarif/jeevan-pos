@@ -9,9 +9,12 @@
     <x-admin.heading class="pb-5" back="{{ $routeBack }}">
         Detail Permintaan {{ $type == 'inbound_request' ? 'Masuk' : 'Keluar' }}
     </x-admin.heading>
+    
+    <livewire:dashboard.inventory.procurement.request-order.show-request-order.header
+    :$requestOrder wire:key="summary-request-order" :$requestOrderItems />
 
     <div class="flex w-full">
-        <div class="flex bg-gray-100  rounded-lg transition p-1 dark:bg-neutral-700  w-full">
+        <div class="flex bg-gray-100  rounded-lg transition p-1 dark:bg-neutral-800  w-full">
             <nav class="flex gap-x-1 p-1" aria-orientation="horizontal">
                 <button type="button" wire:click="switchTab('tab1')" wire:loading.class="pointer-events-none"
                     class="{{ $activeTab == 'tab1' ? 'tab-active' : 'tab-default' }}">
@@ -30,13 +33,14 @@
             @if($tabLoaded['tab1'] == true)
             <div x-show="tab == 'tab1'">
                 <livewire:dashboard.inventory.procurement.request-order.show-request-order.request-order-items lazy
-                    :$requestOrder wire:key="tab1" />
+                    :$requestOrder :$requestOrderItems wire:key="tab1" />
             </div>
             @endif
 
             @if($tabLoaded['tab2'] == true)
             <div x-show="tab == 'tab2'">
-                    <p wire:key="tab2">ini tab 2</p>
+                <livewire:dashboard.inventory.procurement.request-order.show-request-order.partial-approved lazy
+                    :$requestOrder :$requestOrderItems wire:key="tab2" />
             </div>
             @endif
         </div>

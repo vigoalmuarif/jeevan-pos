@@ -118,7 +118,7 @@
     }
 
     .tab-active {
-        @apply pointer-events-none py-3 px-4 inline-flex items-center gap-x-2 bg-gray-200 dark:bg-gray-800 text-sm text-primary-600 hover:text-primary-600  font-medium rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:text-primary-500 dark:hover:text-primary-600;
+        @apply pointer-events-none py-3 px-4 inline-flex items-center gap-x-2 bg-gray-200 dark:bg-gray-900 text-sm text-primary-600 hover:text-primary-600  font-medium rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:text-primary-500 dark:hover:text-primary-600;
     }
 
 }

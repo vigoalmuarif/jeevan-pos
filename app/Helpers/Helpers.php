@@ -68,6 +68,25 @@ use Illuminate\Support\Facades\Auth;
     }
 
 
+    if (!function_exists('money_format')) {
+        function money_format($angka, $mata_uang = 'IDR', $with_symbol = false, $decimal = 2)
+        {
+            $simbol = match (strtoupper($mata_uang)) {
+                'IDR' => 'Rp',
+                'USD' => '$',
+                'EUR' => '€',
+                'JPY' => '¥',
+                'GBP' => '£',
+                default => '',
+            };
+    
+            $formatted = number_format($angka, $decimal, ',', '.');
+    
+            return $with_symbol ? "{$simbol} {$formatted}" : $formatted;
+        }
+    }
+
+
     if (! function_exists('formatPhoneNumber')) {
         function formatPhoneNumber($number)
         {

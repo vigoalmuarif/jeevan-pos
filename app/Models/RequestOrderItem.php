@@ -17,7 +17,7 @@ class RequestOrderItem extends Model
 
     public function unit(): BelongsTo
     {
-        return $this->belongsTo(Unit::class, 'product_unit_id', 'id');
+        return $this->belongsTo(Unit::class, 'satuan_request_id', 'id');
     }
     public function unitSourceWarehouse(): BelongsTo
     {

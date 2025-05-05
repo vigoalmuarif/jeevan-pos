@@ -182,15 +182,15 @@
                             </div>
                             <div class="flex flex-col">
                                 <p class="text-xs">Brand</p>
-                                <p class="text-base font-semibold">{{ $product->brand->name }}</p>
+                                <p class="text-base font-semibold">{{ $product->brand?->name ?: '-' }}</p>
                             </div>
                             <div class="flex flex-col">
                                 <p class="text-xs">Gudang</p>
-                                <p class="text-base font-semibold">{{ $product->warehouse->name }}</p>
+                                <p class="text-base font-semibold">{{ $product->warehouse?->name ?: '-' }}</p>
                             </div>
                             <div class="flex flex-col">
                                 <p class="text-xs">Supplier</p>
-                                <p class="text-base font-semibold">{{ $product->supplier->name }}</p>
+                                <p class="text-base font-semibold">{{ $product->supplier?->name  ?: '-'}}</p>
                             </div>
                         </div>
                         <div class="grid grid-cols-2  gap-5 pt-5">

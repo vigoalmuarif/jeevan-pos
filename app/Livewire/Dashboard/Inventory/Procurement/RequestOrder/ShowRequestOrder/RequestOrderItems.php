@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\Lazy;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Reactive;
 use Livewire\Component;
 use Masmerise\Toaster\Toaster;
 
@@ -34,116 +35,18 @@ class RequestOrderItems extends Component
     public RequestOrder $requestOrder;
     public $requestOrderItems = [];
     public $orderItems = [];
-    public $calculatePending = 0;
-    public $totalReject = 0;
-    public $totalPartial = 0;
-    public $totalFulFilled = 0;
+  
     public $showProsesSimpan = true;
+    public $editing = false;
+
     public function mount()
     {
-        $this->requestOrderItems = RequestOrderItem::selectRaw("
-            request_order_items.*,
-            request_orders.from_warehouse_id,
-            request_orders.to_warehouse_id,
-            product_units.name as request_order_product_unit_name,
-            request_order_unit_conversion.conversion_factor,
-            request_orders.status as order_status,
-            (
-                SELECT DISTINCT 
-                    (stock_alocations.quantity * puc_source.conversion_factor / request_order_unit_conversion.conversion_factor) as stockSourceWarehouse
-                FROM 
-                    stock_alocations
-                JOIN 
-                    product_unit_conversions as puc_source
-                    ON  stock_alocations.product_id = puc_source.product_id 
-                    AND  request_order_items.satuan_request_id = puc_source.product_unit_id
-                WHERE 
-                    stock_alocations.product_id = request_order_items.product_id
-                AND
-                    stock_alocations.location_id = request_orders.to_warehouse_id
-                lIMIT 1
-            ) AS stock_source_warehouse,
+        
+        $this->dispatch('updating-header');
 
-            (
-                SELECT DISTINCT 
-                    (stock_alocations.quantity * puc_destination.conversion_factor / request_order_unit_conversion.conversion_factor) as stockDestinationWarehouse
-                FROM 
-                    stock_alocations
-                JOIN 
-                    product_unit_conversions as puc_destination
-                    ON  stock_alocations.product_id = puc_destination.product_id 
-                    AND  request_order_items.satuan_request_id = puc_destination.product_unit_id
-                WHERE 
-                    stock_alocations.product_id = request_order_items.product_id
-                AND
-                    stock_alocations.location_id = request_orders.from_warehouse_id
-                lIMIT 1
-            ) AS stock_destination_warehouse
-        ")
-            ->with(['product', 'unitSourceWarehouse', 'unitDestinationWarehouse', 'unitApproved'])
-            ->join('request_orders', 'request_orders.id', '=', 'request_order_items.request_order_id')
-            ->join('product_units', 'request_order_items.satuan_request_id', '=', 'product_units.id')
-            ->join('product_unit_conversions as request_order_unit_conversion', function ($join) {
-                $join->on('request_order_items.satuan_request_id', '=', 'request_order_unit_conversion.product_unit_id')
-                    ->on('request_order_items.product_id', '=', 'request_order_unit_conversion.product_id')
-                    ->limit(1);
-            })
-            ->where('request_order_id', $this->requestOrder->id)
-            ->distinct()
-            ->orderBy('request_order_items.id', 'desc')
-            ->get()
-            ->map(function ($item) {
-                return [
-                    ...$item->toArray(), // semua kolom
-                    'qtyApproved' =>  $item->status == 'rejected' ? 0 : ($item->status == '' ? number_format(0, 2) : number_format($item->qty_approved, 2)),
-                    'sisa_source_warehouse' => $item->stock_source_warehouse - $item->qty_request,
-                    'reject_reason' => ''
-                ];
-            })
-            ->toArray();
-
-        $this->calculateReject();
-        $this->calculateFulFilled();
-        // $this->calculateQtyApproved($index);
-        $this->calculatePending();
-        $this->calculatePartialApproved();
-
-        // dd(count($this->requestOrderItems));
     }
 
 
-    public function calculatePartialApproved($index = null)
-    {
-        $this->totalPartial = collect($this->requestOrderItems)
-            ->filter(function ($item) {
-                return  floatval($item['qtyApproved']) < floatval($item['qty_request']) && floatval($item['qtyApproved']) > 0;
-            })
-            ->count();
-    }
-
-    public function calculatePending()
-    {
-        $this->calculatePending = collect($this->requestOrderItems)
-            ->filter(function ($item) {
-                return $item['status'] === '';
-            })
-            ->count();
-        // $this->calculateFulFilled();
-    }
-
-    public function calculateReject()
-    {
-        $this->totalReject = collect($this->requestOrderItems)->where('status', 'rejected')->count();
-    }
-
-    public function calculateFulFilled()
-    {
-        $this->totalFulFilled = collect($this->requestOrderItems)
-            ->filter(function ($item) {
-                return $item['status'] === 'approved' && floatval($item['qtyApproved']) >= floatval($item['qty_request']);
-            })
-            ->count();
-    }
 
     public function reject($index)
     {
@@ -152,22 +55,15 @@ class RequestOrderItems extends Component
             $this->requestOrderItems[$index]['reject_reason'] = null;
             $this->requestOrderItems[$index]['qtyApproved'] = number_format(0, 2);
 
-            $this->calculateReject();
-            $this->calculateFulFilled();
-            $this->calculatePending();
-            $this->calculatePartialApproved();
+            $this->dispatch('updating-header', [
+                'requestOrderItems' => $this->requestOrderItems
+            ]);
 
-            //sembunyikan btn proses simpan jika semua barang direject
-            if ($this->totalReject == count($this->requestOrderItems)) {
-                $this->showProsesSimpan = false;
-            } else {
-                $this->showProsesSimpan = true;
-            }
         } else {
             $this->confirm('Alasan Ditolak', [
                 'icon' => 'warning',
                 'showConfirmButton' => true,
-                'showCancelmButton' => true,
+                'showCancelButton' => true,
                 'cancelButtonText' => 'Batal',
                 'confirmButtonText' => 'Tolak',
                 'onConfirmed' => 'rejectConfirmed',
@@ -196,17 +92,23 @@ class RequestOrderItems extends Component
         $this->requestOrderItems[$data['index']]['status'] = 'rejected';
         $this->requestOrderItems[$data['index']]['qtyApproved'] = 0;
 
-        $this->calculateReject();
-        $this->calculateFulFilled();
-        $this->calculatePending();
-        $this->calculatePartialApproved();
+        $this->dispatch('updating-header', [
+            'requestOrderItems' => $this->requestOrderItems
+        ]);
 
-        //sembunyikan btn proses simpan jika semua barang direject
-        if ($this->totalReject == count($this->requestOrderItems)) {
-            $this->showProsesSimpan = false;
-        } else {
+    }
+
+    #[On('handle-button-save')]
+    public function handleBtnSave($data)
+    {
+          //sembunyikan btn proses simpan jika semua barang direject
+          if ($data['show'] == true) {
             $this->showProsesSimpan = true;
+        } else {
+            $this->showProsesSimpan = false;
         }
+
+   
     }
 
     public function validasiQtyApproved($index)
@@ -242,10 +144,11 @@ class RequestOrderItems extends Component
             $this->requestOrderItems[$index]['status'] = 'approved';
         }
 
-        $this->calculateReject();
-        $this->calculateFulFilled();
-        $this->calculatePending();
-        $this->calculatePartialApproved();
+        $this->dispatch('updating-header', [
+            'requestOrderItems' => $this->requestOrderItems
+        ]);
+    
+
     }
 
     public function save()
@@ -260,6 +163,18 @@ class RequestOrderItems extends Component
 
         if ($checkItem > 0) {
             Toaster::warning('Terdapat ' . $checkItem . ' Item belum diproses. Silahkan cek ulang.');
+            return;
+        }
+
+        //apakah reject all
+        $checkItem = collect($this->requestOrderItems)
+            ->filter(function ($item) {
+                return $item['status']  == 'rejected';
+            })
+            ->count();
+
+        if ($checkItem == count($this->requestOrderItems)) {
+            Toaster::warning('Semua produk telah ditolak, harap pilih Tolak Permintaan!');
             return;
         }
 
@@ -278,8 +193,14 @@ class RequestOrderItems extends Component
     #[On('proses-simpan')]
     public function proccesSaving()
     {
+        $checkItem = collect($this->requestOrderItems)
+            ->filter(function ($item) {
+                return $item['status']  == 'partial_approved';
+            })
+            ->count();
+
         if ($this->requestOrder->status == 'requested' || $this->requestOrder->status == 'reviewed') {
-            $status = $this->totalPartial > 0 ? 'partial_approved' : 'approved';
+            $status = $checkItem > 0 ? 'partial_approved' : 'approved';
         }
         //status approved
         else if ($this->requestOrder->status == 'approved' || $this->requestOrder->status == 'partial_approved') {
@@ -378,7 +299,7 @@ class RequestOrderItems extends Component
                 $destinationwarehouseStocMutationInsert = [];
 
                 foreach ($this->requestOrderItems as $index => $value) {
-                    if ($value['approve'] == true) {
+                    if ($value['status'] == 'approved' || $value['status'] == 'partial_approved') {
                         if ($value['qty_request'] > $value['qtyApproved']) {
                             $status = 'partial_approved';
                         } else {
@@ -391,11 +312,8 @@ class RequestOrderItems extends Component
                     //untuk item order
                     $dataItem = RequestOrderItem::where('id', $value['id'])->first()->update([
                         'qty_approved' => $value['qtyApproved'],
-                        'product_unit_approved_id' => $value['product_unit_id'],
-                        'qty_warehouse_destination' => $value['stock_destination_warehouse'],
-                        'qty_warehouse' => $value['stock_source_warehouse'],
-                        'product_unit_warehouse_id' => $value['product_unit_id'],
-                        'product_unit_destination_id' => $value['product_unit_id'],
+                        'satuan_request_id' => $value['satuan_request_id'],
+                        'reject_reason' => $value['reject_reason'],
                         'status' => $status
                     ]);
 

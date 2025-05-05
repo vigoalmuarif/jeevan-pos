@@ -9,7 +9,7 @@
                     <div class="">
                         <x-form.label for="fromWarehouse">Permintaan Dari Gudang/Cabang</x-form.label>
                         <x-form.select-search id="fromWarehouse" name="fromWarehouse" wire:model.live="fromWarehouse"
-                            placeholder="Pilih unit" :disabled="count($listProducts) > 0 ||  $fromWarehouse  ? true : false">
+                            placeholder="Pilih unit" :disabled="count($listProducts) > 0 || $fromWarehouse ? true : false">
                             <option value="">Pilih Unit</option>
                             @foreach ($warehouses as $warehouse)
                                 <option value="{{ $warehouse->id }}"
@@ -26,12 +26,13 @@
                             placeholder="Pilih unit" :disabled="$fromWarehouse == null || count($listProducts) > 0 ? true : false">
                             <option value="">Pilih Unit</option>
                             @foreach ($warehouses as $warehouse)
-                                <option value="{{ $warehouse->id }}"
-                                    {{ $warehouse->id == $toWarehouse ? 'selected' : '' }}
-                                    {{ $warehouse->id == $fromWarehouse ? 'disabled hidden' : '' }}
-                                    wire:key="to-warehouse-{{ $warehouse->id }}">
-                                    {{ $warehouse->name }}
-                                </option>
+                                @if ($warehouse->id != $fromWarehouse)
+                                    <option value="{{ $warehouse->id }}"
+                                        {{ $warehouse->id == $toWarehouse ? 'selected' : '' }}
+                                        wire:key="to-warehouse-{{ $warehouse->id }}">
+                                        {{ $warehouse->name }}
+                                    </option>
+                                @endif
                             @endforeach
                         </x-form.select-search>
                     </div>
@@ -50,8 +51,8 @@
                         </div>
                         <div class="col-span-2">
                             <x-form.label for="header_desc">Keterangan</x-form.label>
-                            <x-form.input type="text" name="header_dec" id="header_dec" wire:model.live="header_dec" placeholder="Masukan keterangan"
-                                autocomplete="off" wire:model="header_desc" />
+                            <x-form.input type="text" name="header_dec" id="header_dec" wire:model.live="header_dec"
+                                placeholder="Masukan keterangan" autocomplete="off" wire:model="header_desc" />
                         </div>
                     </div>
                 </div>
@@ -61,7 +62,8 @@
                     <div class="w-full mb-4">
                         <x-form.label for="searchProduct">Cari Produk</x-form.label>
                         <x-form.select-search class="w-full" id="searchProduct" name="searchProduct"
-                            wire:model.live="searchProduct" placeholder="Cari Produk" onChange="handleSearchProduct()" :disabled="$fromWarehouse == null || $toWarehouse == null ? true : false">
+                            wire:model.live="searchProduct" placeholder="Cari Produk" onChange="handleSearchProduct()"
+                            :disabled="$fromWarehouse == null || $toWarehouse == null ? true : false">
                             <option value="">Pilih Product</option>
                             @foreach ($products as $product)
                                 <option value="{{ $product->id }}"
@@ -74,7 +76,7 @@
                                 </option>
                             @endforeach
                         </x-form.select-search>
-                        <p  wire:loading wire:target="fromWarehouse">
+                        <p wire:loading wire:target="fromWarehouse">
                             Memuat produk....
                         </p>
                     </div>
@@ -135,10 +137,22 @@
                                                             <td>{{ $conversion->name }}</td>
                                                             <td>
                                                                 @php
-                                                                    if ((float) $productSelected['destinationWarehouse']['qtyConversion'] == 0) {
+                                                                    if (
+                                                                        (float) $productSelected[
+                                                                            'destinationWarehouse'
+                                                                        ]['qtyConversion'] == 0
+                                                                    ) {
                                                                         $stockConversion = 0; // atau kasih warning
-                                                                    } else{
-                                                                        $stockConversion = ($productSelected['destinationWarehouse']['qtyConversion'] * (float) $productSelected['destinationWarehouse']['stockConversion']) / ($conversion->pivot->conversion_factor ?? 1);
+                                                                    } else {
+                                                                        $stockConversion =
+                                                                            ($productSelected['destinationWarehouse'][
+                                                                                'qtyConversion'
+                                                                            ] *
+                                                                                (float) $productSelected[
+                                                                                    'destinationWarehouse'
+                                                                                ]['stockConversion']) /
+                                                                            ($conversion->pivot->conversion_factor ??
+                                                                                1);
                                                                     }
                                                                 @endphp
                                                                 {{ number_format(floor($stockConversion), 2) }}
@@ -216,20 +230,20 @@
                                                             <td>
                                                                 @php
                                                                     if (
-                                                                        (float) $productSelected[
-                                                                            'sourceWarehouse'
-                                                                        ]['stockConversion'] == 0
+                                                                        (float) $productSelected['sourceWarehouse'][
+                                                                            'stockConversion'
+                                                                        ] == 0
                                                                     ) {
                                                                         $stockConversion = 0; // atau kasih warning
                                                                     } else {
                                                                         $stockConversion =
-                                                                            ($productSelected['sourceWarehouse'][
+                                                                            $productSelected['sourceWarehouse'][
                                                                                 'stockConversionToSmall'
-                                                                            ]) /
+                                                                            ] /
                                                                             ($item->pivot->conversion_factor ?? 1);
                                                                     }
                                                                 @endphp
-                                                                {{ (number_format($stockConversion, 2)) }}
+                                                                {{ number_format($stockConversion, 2) }}
                                                             </td>
                                                             <td>{{ $item->pivot->conversion_factor ?? 0 }}</td>
                                                         </tr>
@@ -271,17 +285,18 @@
                             </x-slot>
                             <x-slot name="default" wire:target="addProduct()">
                                 Tambah
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-5 stroke-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="size-5 stroke-2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-                                  </svg>
-                                  
+                                </svg>
+
                             </x-slot>
                         </x-button>
                     </div>
                 </div>
             </x-card-basic>
         </div>
-        <x-card-basic  class="overflow-x-auto scrollbar-thin">
+        <x-card-basic class="overflow-x-auto scrollbar-thin">
             <div class="overflow-y-auto max-h-[40vh] scrollbar-thin" id="wrapperTable">
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-neutral-700" id="table">
                     <thead>
@@ -327,18 +342,17 @@
                                     {{ $item['productSku'] }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                                     {{ $item['productName'] }}</td>
-                                <td
-                                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                                     {{ number_format($item['qtyRequest'], 2) }}</td>
-                                <td
-                                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                                     {{ $item['satuanUnit'] }}</td>
-                                
+
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
                                     {{ $item['note'] }}</td>
                                 <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                                     <x-button.button-icon color="danger" name="Delete" title="Delete"
-                                        wire:click="delete({{ $index }})" wire:target="delete({{ $index }})" wire:loading.attr="disabled">
+                                        wire:click="delete({{ $index }})"
+                                        wire:target="delete({{ $index }})" wire:loading.attr="disabled">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                             stroke-width="1.5" stroke="currentColor" class="size-5">
                                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -367,8 +381,8 @@
             <p>Total : {{ count($listProducts) }} Items</p>
             <div>
 
-                <x-button type="button"  class="btnSecondary py-2.5 me-2.5"
-                    wire:target="refresh,save" wire:click="refresh()" :disabled="count($listProducts) == 0 ? true : false">
+                <x-button type="button" class="btnSecondary py-2.5 me-2.5" wire:target="refresh,save"
+                    wire:click="refresh()" :disabled="count($listProducts) == 0 ? true : false">
                     <x-slot name="loading" wire:target="refresh()">
                         Memproses...
                     </x-slot>
@@ -376,8 +390,7 @@
                         Reset
                     </x-slot>
                 </x-button>
-                <x-button type="submit"  class="btnPrimary py-2.5"
-                    wire:target="save()" :disabled="count($listProducts) == 0 ? true : false">
+                <x-button type="submit" class="btnPrimary py-2.5" wire:target="save()" :disabled="count($listProducts) == 0 ? true : false">
                     <x-slot name="loading" wire:target="save()">
                         Memproses...
                     </x-slot>
@@ -388,7 +401,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round"
                                 d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
                         </svg>
-    
+
                     </x-slot>
                 </x-button>
             </div>
@@ -442,7 +455,9 @@
         $(document).ready(function() {
             Livewire.on('added-item', () => {
                 var $wrapper = $('#wrapperTable');
-                $wrapper.animate({ scrollTop: $wrapper[0].scrollHeight }, 300);
+                $wrapper.animate({
+                    scrollTop: $wrapper[0].scrollHeight
+                }, 300);
             })
         })
     </script>

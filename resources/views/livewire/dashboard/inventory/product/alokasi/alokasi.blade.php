@@ -141,7 +141,7 @@
                     @foreach ($alocations as $index => $alocation)
                         <tr class="hover:bg-slate-200 dark:hover:bg-slate-800" wire:key="{{ $alocation->id }}">
                             <td class="">{{ $alocation->warehouse->name }}</td>
-                            <td class="">{{ $alocation->quantity }}</td>
+                            <td class="">{{ money_format($alocation->quantity) }}</td>
                             <td class="">{{ $alocation->unit->name }}</td>
                             <td class="">{{ $alocation->minimal_stock }}</td>
                             <td class="">{{ $alocation->maximal_stock }}</td>

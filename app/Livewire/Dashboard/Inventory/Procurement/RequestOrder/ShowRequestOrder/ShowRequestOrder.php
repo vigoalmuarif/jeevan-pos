@@ -4,6 +4,7 @@ namespace App\Livewire\Dashboard\Inventory\Procurement\RequestOrder\ShowRequestO
 
 use App\Models\RequestOrder;
 use App\Models\RequestOrderItem;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Reactive;
 use Livewire\Component;
 
@@ -21,6 +22,12 @@ class ShowRequestOrder extends Component
         'tab4' => false,
         'tab5' => false,
     ];
+
+    #[On('request-order-updated')]
+    public function requestOrderUpdate()
+    {
+        
+    }
 
     public function mount()
     {

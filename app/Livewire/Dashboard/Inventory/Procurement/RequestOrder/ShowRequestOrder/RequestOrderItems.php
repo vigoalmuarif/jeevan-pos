@@ -380,7 +380,7 @@ class RequestOrderItems extends Component
                 $insertkartuStok = StockCard::insert($sourcewarehouseStocMutationkInsert);
             }
             DB::commit();
-
+            $this->dispatch('request-order-updated');
             Toaster::success('Data berhasil disimpan!');
         } catch (\Throwable $e) {
             DB::rollBack();

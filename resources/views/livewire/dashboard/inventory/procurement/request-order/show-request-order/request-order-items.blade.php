@@ -23,7 +23,7 @@
                             <th scope="col"
                                 class="px-6 py-3 whitespace-nowrap  text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">
                                 Qty Approved</th>
-                            @if($requestOrder->status == 'requested' || $requestOrder->status == 'reviewed')
+                            @if ($requestOrder->status == 'requested' || $requestOrder->status == 'reviewed')
                                 <th scope="col"
                                     class="px-6 py-3 whitespace-nowrap  text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">
                                     Stok Unit</th>
@@ -37,7 +37,7 @@
                             <th scope="col"
                                 class="px-6 py-3 whitespace-nowrap  text-start text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">
                                 Status</th>
-                            @if($requestOrder->status == 'requested' || $requestOrder->status == 'reviewed')
+                            @if ($requestOrder->status == 'requested' || $requestOrder->status == 'reviewed')
                                 <th scope="col"
                                     class="px-6 py-3 whitespace-nowrap  text-end text-xs font-medium text-gray-500 uppercase dark:text-neutral-500">
                                     Action</th>
@@ -77,21 +77,22 @@
                                         onclick="this.select()" type="text"
                                         disabled="{{ $item['status'] == 'rejected' || $requestOrder->status == 'approved' || $requestOrder->status == 'partial_approved' || $requestOrder->status == 'rejected' ? true : false }}" />
                                 </td>
-                                @if($requestOrder->status == 'requested' || $requestOrder->status == 'reviewed')
-                                <td
-                                class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 tracking-widest">
-                                {{ number_format($stockUnit, 2) }}</td>
-                                <td
-                                    class="px-6 py-4 whitespace-nowrap text-gray-800 dark:text-neutral-200 tracking-widest">
-                                    {{ number_format($stockWarehouse, 2) }}
-                                </td>
+                                @if ($requestOrder->status == 'requested' || $requestOrder->status == 'reviewed')
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200 tracking-widest">
+                                        {{ number_format($stockUnit, 2) }}</td>
+                                    <td
+                                        class="px-6 py-4 whitespace-nowrap text-gray-800 dark:text-neutral-200 tracking-widest">
+                                        {{ number_format($stockWarehouse, 2) }}
+                                    </td>
                                 @endif
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
-                                    <p class="{{ $item['reject_reason'] ? 'text-xs': '' }}">
-                                        {{ $item['reject_reason'] ? 'Peminta :' :  '' }} {{ $item['note'] }}
+                                    <p class="{{ $item['reject_reason'] ? 'text-xs' : '' }}">
+                                        {{ $item['reject_reason'] ? 'Peminta :' : '' }} {{ $item['note'] }}
                                     </p>
-                                    <p class="{{ $item['reject_reason'] ? 'text-xs': '' }}">
-                                        {{ $item['reject_reason'] ? 'Alasan Tolak :' : '' }} {{ $item['reject_reason'] }}
+                                    <p class="{{ $item['reject_reason'] ? 'text-xs' : '' }}">
+                                        {{ $item['reject_reason'] ? 'Alasan Tolak :' : '' }}
+                                        {{ $item['reject_reason'] }}
                                     </p>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200">
@@ -116,7 +117,7 @@
                                             Qty</span>
                                     @endif
                                 </td>
-                                @if($requestOrder->status == 'requested' || $requestOrder->status == 'reviewed')
+                                @if ($requestOrder->status == 'requested' || $requestOrder->status == 'reviewed')
                                     <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                                         {{-- jika status header approved --}}
                                         @if ($requestOrder->status != 'reviewed' && $requestOrder->status != 'requested')
@@ -140,15 +141,19 @@
                                             {{-- status untuk item barang --}}
                                             {{-- reject true --}}
                                             @if ($item['status'] == 'rejected')
-                                                <button type="button" class="px-4 py-1 text-white bg-rose-600 rounded-xl "
-                                                    wire:target="reject({{ $index }})" wire:loading.attr="disabled"
+                                                <button type="button"
+                                                    class="px-4 py-1 text-white bg-rose-600 rounded-xl "
+                                                    wire:target="reject({{ $index }})"
+                                                    wire:loading.attr="disabled"
                                                     wire:click="reject({{ $index }})">
                                                     {{ $item['status'] == 'rejected' ? 'Batal Tolak' : 'Tolak' }}
                                                 </button>
                                                 {{-- default --}}
                                             @else
-                                                <button type="button" class="px-4 py-1 text-white bg-rose-600 rounded-xl"
-                                                    wire:target="reject({{ $index }})" wire:loading.attr="disabled"
+                                                <button type="button"
+                                                    class="px-4 py-1 text-white bg-rose-600 rounded-xl"
+                                                    wire:target="reject({{ $index }})"
+                                                    wire:loading.attr="disabled"
                                                     wire:click="reject({{ $index }})">
                                                     {{ $item['status'] == 'rejected' ? 'Batal Tolak' : 'Tolak' }}
                                                 </button>
@@ -178,20 +183,18 @@
         <div class="flex justify-between items-start pt-5">
             <p>Total : {{ count($requestOrderItems) }} Items</p>
             <div>
-                @if ($requestOrder->status == 'requested' || $requestOrder->status == 'reviewed' || $requestOrder->status == 'rejected')
-                    <a href="{{ route('dashboards.inventories.procurements.request_orders.pdf', $requestOrder->no_order) }}"
-                        target="_blank" class="btnSecondary py-2.5 me-2.5" rel="noopener noreferrer">Cetak</a>
-                    <x-button type="button"
-                        class="btnSecondary bg-rose-600 hover:bg-rose-500 disabled:bg-rose-500/40 py-2.5 me-2.5"
-                        wire:target="refresh,save" wire:click="refresh()" :disabled="count($requestOrderItems) == 0 || $requestOrder->status == 'rejected' ? true : false">
-                        <x-slot name="loading" wire:target="refresh()">
-                            Memproses...
-                        </x-slot>
-                        <x-slot name="default" wire:target="refresh()">
-                            Tolak Permintaan
-                        </x-slot>
-                    </x-button>
-                @endif
+                <a href="{{ route('dashboards.inventories.procurements.request_orders.pdf', $requestOrder->no_order) }}"
+                    target="_blank" class="btnSecondary py-2.5 me-2.5" rel="noopener noreferrer">Cetak</a>
+                <x-button type="button"
+                    class="btnSecondary bg-rose-600 hover:bg-rose-500 disabled:bg-rose-500/40 py-2.5 me-2.5"
+                    wire:target="refresh,save" wire:click="refresh()" :disabled="count($requestOrderItems) == 0 || $requestOrder->status == 'rejected' ? true : false">
+                    <x-slot name="loading" wire:target="refresh()">
+                        Memproses...
+                    </x-slot>
+                    <x-slot name="default" wire:target="refresh()">
+                        Tolak Permintaan
+                    </x-slot>
+                </x-button>
                 @if ($showProsesSimpan)
                     {{-- @if (($requestOrder->status == 'partial_approved' || $requestOrder->status == 'approved') && $requestOrder->status != 'rejected')
                         <x-button type="submit" class="btnPrimary py-2.5" wire:target="save()" :disabled="count($requestOrderItems) == 0 ? true : false">

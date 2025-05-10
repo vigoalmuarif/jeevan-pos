@@ -11,7 +11,7 @@
             x-on:close.stop="setShowPropertyTo(false)"
             x-on:keydown.escape.window="show && closeModalOnEscape()"
             x-show="show"
-            class="fixed inset-0 z-90 overflow-y-auto scrollbar-thin"
+            class="fixed inset-0 z-[999] overflow-y-auto scrollbar-thin"
             style="display: none;"
             id="iniModal"
     >

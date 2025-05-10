@@ -17,6 +17,8 @@ class SupplierForm extends Form
 
     protected function rules() 
     {
+        $this->supplier_code = str()->upper($this->supplier_code);
+        
         return [
             'supplier_code' => [
                 'required',

@@ -15,9 +15,12 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('request_order_id');
             $table->string('delivery_number');
-            $table->datetime('delivery_date');
-            $table->string('note');
-            $table->unsignedBigInteger('user_delivery');
+            $table->datetime('delivery_date')->nullable();
+            $table->datetime('finish_date')->nullable();
+            $table->string('note')->nullable();
+            $table->unsignedBigInteger('user_delivery')->nullable();
+            $table->string('status')->nullable();
+            $table->string('desc')->nullable();
             $table->timestamps();
 
             $table->foreign('request_order_id')->references('id')->on('request_orders');

@@ -18,6 +18,8 @@ class ShowRequestOrder extends Component
         'tab1' => true,  // Tab pertama auto-load
         'tab2' => false,
         'tab3' => false,
+        'tab4' => false,
+        'tab5' => false,
     ];
 
     public function mount()

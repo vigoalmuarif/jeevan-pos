@@ -101,12 +101,18 @@ class Alokasi extends Component
             if ($this->templateAlokasiStatus == 2 || $this->templateAlokasiStatus == 3) {
                 //cek apakah satuan besar dan kecil sama nilainya
                 if ($this->product->base_warehouse_unit_id === $this->product->base_unit_id) {
+                    $unitConversion = ProductUnit::with('unit')
+                        ->where('product_id', $stockAlocation->product_id)
+                        ->where('product_unit_id', $this->product->base_unit_id)
+                        ->first();
+
                     ProductPrice::create([
                         'warehouse_id' => $stockAlocation->location_id,
                         'product_id' => $stockAlocation->product_id,
                         'product_unit_id' => $this->product->base_unit_id,
-                        'cost_price' => ($this->product->base_unit->conversion_factor * $this->product->base_cost_price),
+                        'cost_price' => ($unitConversion->conversion_factor * $this->product->base_cost_price),
                         'selling_price' => 0,
+                        'product_unit_conversion_id' => $unitConversion->id,
                         'sell_online' => 1,
                         'status' => 1,
                     ]);

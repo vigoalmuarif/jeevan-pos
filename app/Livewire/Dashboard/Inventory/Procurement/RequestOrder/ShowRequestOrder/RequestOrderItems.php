@@ -4,10 +4,14 @@ namespace App\Livewire\Dashboard\Inventory\Procurement\RequestOrder\ShowRequestO
 
 use App\Models\Product;
 use App\Models\RequestOrder;
+use App\Models\RequestOrderApprovalLog;
+use App\Models\RequestOrderDelivery;
+use App\Models\RequestOrderDeliveryItem;
 use App\Models\RequestOrderItem;
 use App\Models\StockAlocation;
 use App\Models\StockCard;
 use App\Models\Warehouses;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
@@ -45,8 +49,6 @@ class RequestOrderItems extends Component
         $this->dispatch('updating-header');
 
     }
-
-
 
     public function reject($index)
     {
@@ -107,8 +109,6 @@ class RequestOrderItems extends Component
         } else {
             $this->showProsesSimpan = false;
         }
-
-   
     }
 
     public function validasiQtyApproved($index)
@@ -222,20 +222,24 @@ class RequestOrderItems extends Component
 
         DB::beginTransaction();
         try {
-
-
-
             //update detail
             if ($this->requestOrder->status == 'requested' || $this->requestOrder->status == 'reviewed') {
                 // update header
-                $header = $this->requestOrder->update([
+                $RequestOrderHeader = $this->requestOrder->update([
                     'status' => $status,
                     'approved_by' => auth()->user()->id,
                     'approved_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s')
                 ]);
 
-                $units = collect($this->requestOrderItems)->pluck('satuanApproved')->toArray();
+                //insert delivery header
+                $deliveryHeader = RequestOrderDelivery::create([
+                    'request_order_id' => $this->requestOrder->id,
+                    'delivery_number' => $this->generateNoDelivery(),
+                    'status' => 'New',
+                ]);
+
+                // $units = collect($this->requestOrderItems)->pluck('satuanApproved')->toArray();
 
                 $products  = collect($this->requestOrderItems)->pluck('product_id')->toArray();
 
@@ -264,9 +268,6 @@ class RequestOrderItems extends Component
                     ->whereIn('stock_alocations.product_id', $products)
                     ->distinct()
                     ->get();
-
-
-
 
                 //conversi satuan
                 $fromWarehouse = [];
@@ -315,6 +316,26 @@ class RequestOrderItems extends Component
                         'satuan_request_id' => $value['satuan_request_id'],
                         'reject_reason' => $value['reject_reason'],
                         'status' => $status
+                    ]);
+
+                    //insert ke log approval
+                    RequestOrderApprovalLog::create([
+                        'request_order_id' => $this->requestOrder->id,
+                        'request_order_item_id' => $value['id'],
+                        'qty_approved' => $value['qtyApproved'],
+                        'created_by' => auth()->user()->id
+                    ]);
+
+                    //insert delivery item
+                    RequestOrderDeliveryItem::create([
+                        'request_order_delivery_id' => $deliveryHeader->id,
+                        'request_order_item_id' => $value['id'],
+                        'product_id' => $value['product_id'],
+                        'unit_requested_id' => $value['satuan_request_id'],
+                        'qty_requested' => $value['qty_request'],
+                        'total_qty_approved' => $value['qtyApproved'],
+                        'qty_delivered' => $value['qtyApproved'],
+                        'status' => $status,
                     ]);
 
                     // //conversi satuan dari satuan order ke satuan origin alokasi gudang yang meminta
@@ -368,6 +389,33 @@ class RequestOrderItems extends Component
         }
 
         // Toaster::warning('ada apa');
+    }
+
+    public function generateNoDelivery()
+    {
+        $now = Carbon::now();
+
+        $prefix = 'DV';
+        $month = $now->format('m');     // 01-12
+        $year = $now->format('y');      // ambil angka belakang misal 2025 -> 25
+
+        $base = $prefix . $month . $year; // RO0425
+
+        // Hitung jumlah order bulan ini
+        $lastOrder = RequestOrder::where('no_order', 'ilike', $base . '%')
+            ->orderBy('no_order', 'desc')
+            ->first();
+           
+
+        if ($lastOrder) {
+            // Ambil nomor urut terakhir dan tambah 1
+            $lastNumber = (int) substr($lastOrder->no_order, -4);
+            $newNumber = str_pad($lastNumber + 1, 4, '0', STR_PAD_LEFT);
+        } else {
+            $newNumber = '0001';
+        }
+
+        return $base . $newNumber;
     }
 
     public function placeholder()

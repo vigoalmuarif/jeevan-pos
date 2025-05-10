@@ -75,7 +75,7 @@
                                         wire:model.debounce.700ms="requestOrderItems.{{ $index }}.qtyApproved"
                                         wire:keyup.debounce.700ms="validasiQtyApproved({{ $index }})"
                                         onclick="this.select()" type="text"
-                                        disabled="{{ $item['status'] == 'rejected' || ($item['status'] != 'requested' || $item['status'] != 'reviewed') ? true : false }}" />
+                                        disabled="{{ $item['status'] == 'rejected' || $requestOrder->status == 'approved' || $requestOrder->status == 'partial_approved' || $requestOrder->status == 'rejected' ? true : false }}" />
                                 </td>
                                 @if($requestOrder->status == 'requested' || $requestOrder->status == 'reviewed')
                                 <td

@@ -24,6 +24,18 @@
                     class="{{ $activeTab == 'tab2' ? 'tab-active' : 'tab-default' }}">
                     Partial Approve
                 </button>
+                <button type="button" wire:click="switchTab('tab3')" wire:loading.class="pointer-events-none"
+                    class="{{ $activeTab == 'tab3' ? 'tab-active' : 'tab-default' }}">
+                    Pengiriman
+                </button>
+                <button type="button" wire:click="switchTab('tab4')" wire:loading.class="pointer-events-none"
+                    class="{{ $activeTab == 'tab4' ? 'tab-active' : 'tab-default' }}">
+                    Penerimaan
+                </button>
+                <button type="button" wire:click="switchTab('tab5')" wire:loading.class="pointer-events-none"
+                    class="{{ $activeTab == 'tab5' ? 'tab-active' : 'tab-default' }}">
+                    Retur
+                </button>
             </nav>
         </div>
     </div>
@@ -41,6 +53,27 @@
             <div x-show="tab == 'tab2'">
                 <livewire:dashboard.inventory.procurement.request-order.show-request-order.partial-approved lazy
                     :$requestOrder :$requestOrderItems wire:key="tab2" />
+            </div>
+            @endif
+
+            @if($tabLoaded['tab3'] == true)
+            <div x-show="tab == 'tab3'">
+                <livewire:dashboard.inventory.procurement.request-order.show-request-order.delivery lazy
+                    :$requestOrder :$requestOrderItems wire:key="tab3" />
+            </div>
+            @endif
+
+            @if($tabLoaded['tab4'] == true)
+            <div x-show="tab == 'tab4'">
+                <livewire:dashboard.inventory.procurement.request-order.show-request-order.received lazy
+                    :$requestOrder :$requestOrderItems wire:key="tab4" />
+            </div>
+            @endif
+
+            @if($tabLoaded['tab5'] == true)
+            <div x-show="tab == 'tab5'">
+                <livewire:dashboard.inventory.procurement.request-order.show-request-order.retur lazy
+                    :$requestOrder :$requestOrderItems wire:key="tab5" />
             </div>
             @endif
         </div>

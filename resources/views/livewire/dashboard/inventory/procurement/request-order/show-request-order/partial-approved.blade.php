@@ -44,7 +44,7 @@
                                     {{ $no++ }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200" title="{{ $item['product']['name'] }}">
-                                    {{ str()->limit('[' .$item['product']['sku'] . ']' . ' ' .  $item['product']['name'], 30 , '.....') }} </td>
+                                    {{ str()->limit($item['product']['name'], 20 , '.....') }} </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm  text-gray-800 dark:text-neutral-200">
                                     {{ $item['satuan_request'] }}</td>
                                 <td
@@ -140,7 +140,7 @@
                                     {{ $no++ }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800 dark:text-neutral-200" title="{{ $item['product']['name'] }}">
-                                    {{ str()->limit('[' .$item['product']['sku'] . ']' . ' ' .  $item['product']['name'], 30 , '.....') }} </td>
+                                    {{ str()->limit($item['product']['name'], 20 , '.....') }} </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm  text-gray-800 dark:text-neutral-200">
                                     {{ $item['satuan'] }}</td>
                                 <td

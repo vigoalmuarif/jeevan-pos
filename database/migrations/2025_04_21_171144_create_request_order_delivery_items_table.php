@@ -16,12 +16,15 @@ return new class extends Migration
             $table->unsignedBigInteger('request_order_delivery_id');
             $table->unsignedBigInteger('request_order_item_id');
             $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('unit_requested_id', 16, 5);
             $table->decimal('qty_requested', 16, 5);
+            $table->decimal('total_qty_approved', 16, 5);
             $table->decimal('qty_delivered', 16, 5);
             $table->string('status', 20);
             $table->timestamps();
 
             $table->foreign('request_order_delivery_id')->references('id')->on('request_order_deliveries');
+            $table->foreign('unit_requested_id')->references('id')->on('product_units');
             $table->foreign('request_order_item_id')->references('id')->on('request_order_items');
             $table->foreign('product_id')->references('id')->on('products');
         });
